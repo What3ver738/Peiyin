@@ -27,7 +27,7 @@ jobs:
 
       - name: Install
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip "setuptools>=83.0.0"
           pip install -e ".[dev]"
 
       # The suite uses invented fixtures and blocks network connections; no
@@ -58,17 +58,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: No hardcoded voice ids outside tests
         run: |
           if grep -rIEn '\b[0-9a-f]{32}\b' peiyin/; then
             echo "::error::a 32-char voice id is hardcoded"; exit 1
           fi
+
       - name: No API keys or personal paths
         run: |
           if grep -rIEn 'sk-[A-Za-z0-9]{20,}|AIza[A-Za-z0-9_-]{20,}|/Users/|/home/[a-z]' \
              peiyin/ scripts/; then
             echo "::error::a key or a personal path is committed"; exit 1
           fi
+
       - name: No media, transcript or subtitle files
         run: |
           if find . -path ./.git -prune -o \
@@ -81,10 +84,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
       - run: python -m pip install --upgrade pip build
       - run: python -m build
+
       - name: Verify wheel profiles and notices
         run: python scripts/check_wheel.py
