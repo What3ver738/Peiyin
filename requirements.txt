@@ -1,0 +1,12 @@
+gradio==6.27.0
+pillow>=12.3,<13
+fastapi==0.141.1
+starlette==1.6.0
+huggingface_hub==1.31.0
+faster-whisper>=1.0
+httpx>=0.24
+sherpa-onnx>=1.10
+numpy
+soundfile
+imageio-ffmpeg
+tomli; python_version < "3.11"

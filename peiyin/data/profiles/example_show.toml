@@ -1,0 +1,91 @@
+# Example profile.
+#
+# A worked example for a show with six main characters and a lot of nickname
+# variation — the case that needs the most care, because a transcript may write
+# the same person half a dozen ways.
+#
+# Everything here is invented. Peiyin distributes no transcripts and points at
+# no transcript source; fill in the [transcripts] section below with a source
+# you have the right to use, then copy this file and edit it for your own show.
+
+name = "Example Show"
+target_language = "zh-CN"
+
+
+[transcripts]
+# EMPTY ON PURPOSE. Fill in one of these to enable transcript-backed casting
+# and episode identification. Left empty, this profile runs in no-transcript
+# mode: speakers are grouped acoustically and accuracy drops noticeably.
+#
+# A "name_colon" transcript is one utterance per line:
+#
+#     Mara:  The lighthouse keeper left the lamp burning all winter.
+#     Oskar: Nobody has climbed those stairs since the harbour froze.
+#
+# Name the files after the episode they contain — "0101.txt" for season 1
+# episode 1 — because the file name becomes the episode id.
+local_folder = ""
+url_list = []
+url_base = []
+url_suffix = ""
+format = "name_colon"
+# Change this value to refresh remote transcripts after their content changes.
+revision = ""
+
+# Used only with url_base, to enumerate which episode ids exist: one entry per
+# season, giving that season's episode count.
+episodes_per_season = [12, 12, 10]
+# Some collections put a two-part episode on a single page.
+multi_part_pages = ["0211-0212"]
+covered_by_multi = ["0211", "0212"]
+
+
+[theme]
+# Mute an opening theme or title sequence.
+#
+# skip_intro_seconds: every line starting before this is muted rather than
+# dubbed. Use it when the show opens straight into a fixed title sequence.
+# Leave at 0 if the theme follows a cold open, or you will mute real dialogue.
+skip_intro_seconds = 0
+
+# theme_words: optional. If a line has no match in the transcript and shares at
+# least three of these words, it is treated as sung theme lyrics and muted.
+# Fill in your own words; Peiyin ships none.
+theme_words = []
+
+
+[[characters]]
+name = "Mara"
+aliases = ["Mar", "Mara Aldridge"]
+gender = "F"
+main = true
+
+[[characters]]
+name = "Oskar"
+aliases = ["Oz", "Oskar Lindqvist"]
+gender = "M"
+main = true
+
+[[characters]]
+name = "Priya"
+aliases = ["Pri", "Pree", "Priya Raman"]
+gender = "F"
+main = true
+
+[[characters]]
+name = "Theo"
+aliases = ["Theodore Vance", "Theo Vance"]
+gender = "M"
+main = true
+
+[[characters]]
+name = "Nadia"
+aliases = ["Nads", "Nadia Petrova", "Nadia Petrova-Vance"]
+gender = "F"
+main = true
+
+[[characters]]
+name = "Felix"
+aliases = ["Flick", "Felix Osei"]
+gender = "M"
+main = true

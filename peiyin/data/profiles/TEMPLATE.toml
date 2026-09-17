@@ -1,0 +1,85 @@
+# A Peiyin show profile.
+#
+# Copy this file, fill it in, and pick it from the Profile dropdown in the app.
+# A profile describes a show: who the characters are and where YOUR transcripts
+# live. It never contains transcript text, dialogue, or voice ids.
+
+name = "My show"
+
+# Only Mandarin output is currently supported. Keep this set to "zh-CN".
+target_language = "zh-CN"
+
+
+[transcripts]
+# Transcripts give Peiyin the exact speaker of every line, and let it work out
+# which episode a file is. They are optional: with none configured, Peiyin
+# falls back to grouping voices acoustically, which is noticeably less accurate
+# (see "no-transcript mode" in the README).
+#
+# Peiyin ships NO transcripts and NO transcript sources. Point this at
+# something you have the right to use. Set ONE of the following:
+
+# A folder on your machine with one transcript file per episode. The file name
+# becomes the episode id, so name them consistently (e.g. "0101.txt").
+local_folder = ""
+
+# ...or explicit URLs, one per episode.
+url_list = []
+
+# ...or a URL prefix that episode ids are appended to, e.g.
+# "https://example.com/transcripts/" + "0101" + ".html".
+url_base = []
+url_suffix = ""
+
+# How to read those files. One of:
+#   "name_colon"         NAME: line of dialogue        (one line per utterance)
+#   "srt_with_speakers"  an .srt whose text begins "NAME: ..."
+#   "html"               a web page using <b>NAME:</b> or plain "NAME:" markup
+format = "name_colon"
+# Change this value to refresh remote transcripts after their content changes.
+revision = ""
+
+# Only needed with url_base, to work out which episode ids exist. One entry per
+# season, giving that season's episode count.
+episodes_per_season = []
+# Pages that cover more than one episode, and the ids they cover.
+multi_part_pages = []
+covered_by_multi = []
+
+
+[theme]
+# Mute an opening theme or title sequence.
+#
+# skip_intro_seconds: every line starting before this many seconds is muted
+# rather than dubbed. Use it when the show opens straight into a fixed title
+# sequence. Leave at 0 if the theme follows a cold open, or you will mute real
+# dialogue.
+skip_intro_seconds = 0
+
+# theme_words: optional. If a line has no match in the transcript and shares at
+# least three of these words, it is treated as sung theme lyrics and muted.
+# Useful when the theme does not sit at a fixed position. Fill in your own
+# words; Peiyin ships none.
+theme_words = []
+
+
+# One block per character. Main characters get their own permanent voice, cast
+# in the Cast tab. Everyone else is a guest and draws from the guest pool.
+#
+#   name     what Peiyin calls them, and what appears in the script table
+#   aliases  other ways the transcript writes them. One word (a nickname) or
+#            several (a full name) -- Peiyin works out which from the spacing.
+#   gender   "M" or "F", used to pick a gender-matched voice. Optional.
+#   main     true for a main character, false for a recurring guest.
+
+[[characters]]
+name = "Alice"
+aliases = ["Ali", "Alice Smith"]
+gender = "F"
+main = true
+
+[[characters]]
+name = "Bob"
+aliases = ["Bobby", "Robert Jones"]
+gender = "M"
+main = true
