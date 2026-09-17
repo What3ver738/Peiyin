@@ -70,7 +70,7 @@ def test_the_pitch_filter_rejects_a_shrill_guest_voice(tmp, tone_wav):
     cfgp = load_config()
     saved_f0 = cfgp.get("fish_voice_f0")
     cfgp["fish_voice_f0"] = {"shrill000": 340.0, "normal000": 200.0}
-    CONFIG_PATH.write_text(json.dumps(cfgp, ensure_ascii=False))
+    CONFIG_PATH.write_text(json.dumps(cfgp, ensure_ascii=False), encoding="utf-8")
     kept = filter_pool_by_pitch("", ["shrill000", "normal000", "unknown000"])
     assert kept == ["normal000", "unknown000"], kept
     cfgp = load_config()
@@ -78,6 +78,6 @@ def test_the_pitch_filter_rejects_a_shrill_guest_voice(tmp, tone_wav):
         cfgp.pop("fish_voice_f0", None)
     else:
         cfgp["fish_voice_f0"] = saved_f0
-    CONFIG_PATH.write_text(json.dumps(cfgp, ensure_ascii=False))
+    CONFIG_PATH.write_text(json.dumps(cfgp, ensure_ascii=False), encoding="utf-8")
     DIAG.clear()
     print(f"pitch filter OK (shrill {fhi:.0f}Hz rejected, {flo:.0f}Hz kept)")

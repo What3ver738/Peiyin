@@ -136,8 +136,8 @@ def test_canonical_speaker_uses_the_active_profile():
 
 def test_switching_profile_changes_the_cast():
     path = profiles.create_profile("switch-test", show_name="Switch Test")
-    text = path.read_text()
-    path.write_text(text.replace('name = "Alice"', 'name = "Zara"'))
+    text = path.read_text(encoding="utf-8")
+    path.write_text(text.replace('name = "Alice"', 'name = "Zara"'), encoding="utf-8")
     profiles.set_active_profile("switch-test")
     assert profiles.main_cast() == ["Zara", "Bob"]
     assert canonical_speaker("Zara") == "Zara"

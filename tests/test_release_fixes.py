@@ -45,10 +45,10 @@ def test_settings_failure_keeps_previous_file_and_cleans_temp(monkeypatch):
 def test_corrupt_config_is_not_silently_overwritten():
     original = config.CONFIG_PATH.read_bytes()
     try:
-        config.CONFIG_PATH.write_text("not json")
+        config.CONFIG_PATH.write_text("not json", encoding="utf-8")
         with pytest.raises(RuntimeError, match="Cannot read"):
             config.save_config(output_dir="test")
-        assert config.CONFIG_PATH.read_text() == "not json"
+        assert config.CONFIG_PATH.read_text(encoding="utf-8") == "not json"
     finally:
         config.CONFIG_PATH.write_bytes(original)
 
@@ -97,7 +97,7 @@ def test_cache_changes_with_profile_model_provider_and_transcripts(tmp_path, mon
     folder = tmp_path / "transcripts"
     folder.mkdir()
     f = folder / "0101.txt"
-    f.write_text("Alice: first")
+    f.write_text("Alice: first", encoding="utf-8")
     prof = replace(profiles.active(), transcripts=profiles.Transcripts(local_folder=str(folder)))
     monkeypatch.setattr(profiles, "active", lambda: prof)
     config.save_config(llm_model=None)
@@ -106,7 +106,7 @@ def test_cache_changes_with_profile_model_provider_and_transcripts(tmp_path, mon
     assert original != script_workdir(tmp_path, "medium", "sk-test")
     assert original != script_workdir(tmp_path, "small", "gemini-test")
     assert original != script_workdir(tmp_path, "small", "sk-test", False)
-    f.write_text("Alice: other")
+    f.write_text("Alice: other", encoding="utf-8")
     assert original != script_workdir(tmp_path, "small", "sk-test")
     changed = script_workdir(tmp_path, "small", "sk-test")
     config.save_config(llm_model="custom-model")
@@ -136,7 +136,7 @@ def test_build_script_does_not_reuse_edits_after_model_change(tmp_path, monkeypa
     first, _ = pipeline.build_script(video, "sk-test", "small", tmp_path, False)
     stage = script_workdir(tmp_path, "small", "sk-test", False)
     first[0]["zh"] = "编辑"
-    (stage / "script_edited.json").write_text(json.dumps(first))
+    (stage / "script_edited.json").write_text(json.dumps(first), encoding="utf-8")
     reused, edited = pipeline.build_script(video, "sk-test", "small", tmp_path, False)
     assert edited and reused[0]["zh"] == "编辑"
     assert len(translated) == 1
@@ -152,16 +152,16 @@ def test_local_transcript_edits_change_parsed_database(tmp_path, monkeypatch):
     folder = tmp_path / "transcripts"
     folder.mkdir()
     f = folder / "0101.txt"
-    f.write_text("\n".join(f"Mara: This is original line {i}." for i in range(6)))
+    f.write_text("\n".join(f"Mara: This is original line {i}." for i in range(6)), encoding="utf-8")
     prof = replace(profiles.active(), transcripts=profiles.Transcripts(local_folder=str(folder)))
     monkeypatch.setattr(profiles, "active", lambda: prof)
     ensure_scripts()
     old = _cache_dir(prof)
-    f.write_text(f.read_text().replace("original", "updated"))
+    f.write_text(f.read_text(encoding="utf-8").replace("original", "updated"), encoding="utf-8")
     ensure_scripts()
     new = _cache_dir(prof)
     assert old != new
-    assert "updated" in (new / "0101.json").read_text()
+    assert "updated" in (new / "0101.json").read_text(encoding="utf-8")
 
 
 def test_ui_never_prefills_saved_credentials_and_serializes_changes(monkeypatch):
@@ -239,7 +239,7 @@ def test_review_callbacks_apply_edits_and_reject_changed_video(tmp_path, monkeyp
     rows[0][4] = "修改"
     render(state, rows, *args, .3, False, False, progress=lambda *a, **kw: None)
     assert outputs[0][0]["zh"] == "修改"
-    assert json.loads((Path(state["stage"]) / "script_edited.json").read_text())[0]["zh"] == "修改"
+    assert json.loads((Path(state["stage"]) / "script_edited.json").read_text(encoding="utf-8"))[0]["zh"] == "修改"
     video.write_bytes(b"video-b")
     with pytest.raises(Exception, match="Prepare the script again"):
         render(state, rows, *args, .3, False, False, progress=lambda *a, **kw: None)

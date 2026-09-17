@@ -60,7 +60,7 @@ def synth_raw(script, voice_map, workdir, progress=None,
         acc = {primary} | ({fb} if fb else set())
         valid = {ln["zh"] + "|" + v + "|" + e + "|" + cache_provider
                  for v in acc if v for e in {emo, ""}}
-        if std.exists() and stamp.exists() and stamp.read_text() in valid:
+        if std.exists() and stamp.exists() and stamp.read_text(encoding="utf-8") in valid:
             return idx, std, False
         raw = tts_dir / f"{idx:04d}.mp3"
         err = None
@@ -73,7 +73,7 @@ def synth_raw(script, voice_map, workdir, progress=None,
                                         api_key=fish_key, emotion=e)
                     to_std_wav(raw, std)
                     raw.unlink(missing_ok=True)
-                    stamp.write_text(ln["zh"] + "|" + voice + "|" + e + "|" + cache_provider)
+                    stamp.write_text(ln["zh"] + "|" + voice + "|" + e + "|" + cache_provider, encoding="utf-8")
                     return idx, std, voice != primary   # True only if voice switched
                 except Exception as ex:  # noqa: BLE001
                     err = ex
@@ -223,7 +223,7 @@ def _fit_key(src_wav, tempo):
     src = Path(src_wav)
     stamp = src.with_suffix(".txt")      # "zh|voice|emo|provider" from synth_raw
     try:
-        ident = stamp.read_text()
+        ident = stamp.read_text(encoding="utf-8")
     except Exception:  # noqa: BLE001
         try:
             h = hashlib.sha1()

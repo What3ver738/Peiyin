@@ -21,7 +21,7 @@ def _set_pool(male=(), female=()):
     lines = [f"M {v}" for v in male] + [f"F {v}" for v in female]
     cfg = load_config()
     cfg["fish_guest_pool_text"] = "\n".join(lines)
-    CONFIG_PATH.write_text(json.dumps(cfg, ensure_ascii=False))
+    CONFIG_PATH.write_text(json.dumps(cfg, ensure_ascii=False), encoding="utf-8")
 
 
 def test_no_voice_ids_ship_by_default():
@@ -138,7 +138,7 @@ def test_cast_voices_are_reserved_and_guests_never_get_one():
             cfgk.pop("fish_auto_guest_pool", None)
         else:
             cfgk["fish_auto_guest_pool"] = auto
-        CONFIG_PATH.write_text(json.dumps(cfgk, ensure_ascii=False))
+        CONFIG_PATH.write_text(json.dumps(cfgk, ensure_ascii=False), encoding="utf-8")
         tts.set_auto_public_voices(auto is not None)
         tts.save_voice_cast(CAST)
         tts.save_profile_setting(guest_voices={}, guest_genders=genders or {})

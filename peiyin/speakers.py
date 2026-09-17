@@ -621,7 +621,7 @@ def cast_speakers(segments, llm_key, wav16, workdir, use_scripts=True,
     (and the per-segment sidx/stext) without re-casting."""
     cache = workdir / "speakers8.json"     # bumped for the script-first spine
     if cache.exists():
-        d = json.loads(cache.read_text())
+        d = json.loads(cache.read_text(encoding="utf-8"))
         sidx = d.get("sidx")
         stext = d.get("stext")
         if sidx and len(sidx) == len(segments):
@@ -830,5 +830,5 @@ def cast_speakers(segments, llm_key, wav16, workdir, use_scripts=True,
         "stext": [segments[i].get("stext") for i in range(n)],
         "script_lines": matched_script_lines,
         "spans": {str(j): list(v) for j, v in (matched_spans or {}).items()},
-    }, ensure_ascii=False))
+    }, ensure_ascii=False), encoding="utf-8")
     return labels, diag, matched_script_lines, (matched_spans or None)

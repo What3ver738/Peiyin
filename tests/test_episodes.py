@@ -58,9 +58,9 @@ def transcript_folder(tmp_path):
         path = profiles.create_profile("episode-test", show_name="Episode Test")
     except profiles.ProfileError:
         path = profiles.profile_paths()["episode-test"]
-    text = (profiles.BUNDLED_PROFILE_DIR / "TEMPLATE.toml").read_text()
+    text = (profiles.BUNDLED_PROFILE_DIR / "TEMPLATE.toml").read_text(encoding="utf-8")
     text = text.replace('local_folder = ""', f'local_folder = "{folder.as_posix()}"')
-    path.write_text(text)
+    path.write_text(text, encoding="utf-8")
     profiles.set_active_profile("episode-test")
     return folder
 

@@ -62,7 +62,7 @@ def transcribe(wav16, model_size, workdir, progress=None):
     # stale transcript can never feed the new aligner.
     cache = workdir / f"transcript_v2_{model_size}.json"
     if cache.exists():
-        return json.loads(cache.read_text())
+        return json.loads(cache.read_text(encoding="utf-8"))
     from faster_whisper import WhisperModel
     model = WhisperModel(model_size, device="cpu", compute_type="int8")
     # word_timestamps=True is the heart of v2: it gives a real start/end for
@@ -111,7 +111,7 @@ def transcribe(wav16, model_size, workdir, progress=None):
             segments[i]["end"] = max(segments[i]["end"],
                                      segments[i]["start"] + 0.3)
     segments = merge_utterances(segments)
-    cache.write_text(json.dumps(segments, ensure_ascii=False))
+    cache.write_text(json.dumps(segments, ensure_ascii=False), encoding="utf-8")
     return segments
 
 

@@ -391,13 +391,13 @@ def ensure_scripts(progress=None):
 
     vfile = cache / "_parser_version"
     try:
-        cached_v = int(vfile.read_text().strip())
+        cached_v = int(vfile.read_text(encoding="utf-8").strip())
     except Exception:  # noqa: BLE001
         cached_v = 0
     if cached_v != PARSER_VERSION:
         for f in cache.glob("*.json"):
             f.unlink(missing_ok=True)
-        vfile.write_text(str(PARSER_VERSION))
+        vfile.write_text(str(PARSER_VERSION), encoding="utf-8")
 
     have = sorted(f.stem for f in cache.glob("*.json")
                   if not f.stem.startswith("_"))
@@ -410,7 +410,7 @@ def ensure_scripts(progress=None):
         found = _load_remote(_remote_urls(t), parse, progress)
 
     for code, lines in found.items():
-        (cache / f"{code}.json").write_text(json.dumps(lines, ensure_ascii=False))
+        (cache / f"{code}.json").write_text(json.dumps(lines, ensure_ascii=False), encoding="utf-8")
 
     have = sorted(found)
     if not have:
@@ -441,7 +441,7 @@ def identify_episode(segments):
         if f.stem.startswith("_"):
             continue
         try:
-            lines = json.loads(f.read_text())
+            lines = json.loads(f.read_text(encoding="utf-8"))
         except Exception:
             continue
         if not lines:

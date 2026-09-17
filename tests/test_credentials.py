@@ -53,7 +53,7 @@ def test_dotenv_is_read_without_clobbering_a_real_env_var(tmp_path, monkeypatch)
         "\n"
         'FISH_API_KEY="from-dotenv"\n'
         "OPENAI_API_KEY=sk-from-dotenv\n"
-        "MALFORMED LINE\n")
+        "MALFORMED LINE\n", encoding="utf-8")
     monkeypatch.delenv("FISH_API_KEY", raising=False)
     monkeypatch.setenv("OPENAI_API_KEY", "already-set")
     found = config.load_dotenv(env)

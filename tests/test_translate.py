@@ -43,7 +43,7 @@ def test_reused_translations_keep_their_own_wording(tmp):
         {"en": "What?", "zh": "\u4ec0\u4e48\uff1f", "emo": "angry", "sidx": 3},
         {"en": "What?", "zh": "\u5565\uff1f", "emo": "confused", "sidx": 9},
         {"en": "I am fine", "zh": "\u6211\u5f88\u597d", "emo": "", "sidx": 5},
-    ], ensure_ascii=False))
+    ], ensure_ascii=False), encoding="utf-8")
     fresh = [{"en": "What?", "zh": "", "emo": "", "sidx": 3, "speaker": "Alice"},
              {"en": "What?", "zh": "", "emo": "", "sidx": 9, "speaker": "Erin"},
              {"en": "I am fine", "zh": "", "emo": "", "sidx": 5, "speaker": "Amy"},

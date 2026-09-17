@@ -69,11 +69,11 @@ def test_the_tempo_fit_cache_is_content_addressed(tmp, tone_wav):
     a_wav, b_wav = fitd / "0047.wav", fitd / "0099.wav"
     tone_wav(a_wav, 120, dur=1.9)
     tone_wav(b_wav, 250, dur=0.6)
-    (fitd / "0047.txt").write_text("我们分手了|voiceA||fish")
-    (fitd / "0099.txt").write_text("闻闻小猫|voiceB||fish")
+    (fitd / "0047.txt").write_text("我们分手了|voiceA||fish", encoding="utf-8")
+    (fitd / "0099.txt").write_text("闻闻小猫|voiceB||fish", encoding="utf-8")
     assert _fit_key(a_wav, 1.0) != _fit_key(b_wav, 1.0), "fit cache collision!"
     assert _fit_key(a_wav, 1.0) == _fit_key(a_wav, 1.0), "fit key unstable"
     assert _fit_key(a_wav, 1.0) != _fit_key(a_wav, 1.35), "tempo ignored"
     # different content at the SAME index must not collide either
-    (fitd / "0047.txt").write_text("完全不同的台词|voiceC||fish")
+    (fitd / "0047.txt").write_text("完全不同的台词|voiceC||fish", encoding="utf-8")
     assert _fit_key(a_wav, 1.0) != _fit_key(b_wav, 1.0)

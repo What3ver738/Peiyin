@@ -25,6 +25,7 @@ import soundfile as sf  # noqa: E402
 def _no_network(monkeypatch):
     """Every test in this suite is offline. Nothing here should ever call out."""
     import socket
+    from contextvars import ContextVar
 
     import httpx
 
@@ -35,7 +36,26 @@ def _no_network(monkeypatch):
         raise AssertionError(
             "a test tried to make a network request; mock it instead")
 
-    monkeypatch.setattr(socket.socket, "connect", _blocked)
+    # Windows implements socketpair with a loopback connection. asyncio needs
+    # this internal pair even when the test makes no network requests.
+    making_pair = ContextVar("making_socketpair", default=False)
+    original_pair = socket.socketpair
+    original_connect = socket.socket.connect
+
+    def _socketpair(*args, **kwargs):
+        token = making_pair.set(True)
+        try:
+            return original_pair(*args, **kwargs)
+        finally:
+            making_pair.reset(token)
+
+    def _connect(sock, address):
+        if making_pair.get():
+            return original_connect(sock, address)
+        return _blocked()
+
+    monkeypatch.setattr(socket, "socketpair", _socketpair)
+    monkeypatch.setattr(socket.socket, "connect", _connect)
     monkeypatch.setattr(httpx.Client, "send", _blocked)
     monkeypatch.setattr(httpx.Client, "request", _blocked)
     monkeypatch.setattr(httpx.Client, "get", _blocked)

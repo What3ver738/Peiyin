@@ -112,7 +112,7 @@ def _reuse_translations(script, workdir, engine):
         by_line, by_en = {}, {}
         for f in sorted(workdir.glob(f"script*_{engine}.json")):
             try:
-                old = json.loads(f.read_text())
+                old = json.loads(f.read_text(encoding="utf-8"))
             except Exception:  # noqa: BLE001
                 continue
             for ln in old:
@@ -160,9 +160,9 @@ def build_script(video, llm_key, model_size, workdir,
     script_cache = workdir / f"script9_{engine}.json"    # bumped for script-first
     edited = workdir / "script_edited.json"
     if edited.exists():
-        return json.loads(edited.read_text()), True
+        return json.loads(edited.read_text(encoding="utf-8")), True
     if script_cache.exists():
-        return json.loads(script_cache.read_text()), False
+        return json.loads(script_cache.read_text(encoding="utf-8")), False
 
     report(0.02, "Reading the video file...")
     wav16, _ = extract_audio(video, audio_workdir)
@@ -200,7 +200,7 @@ def build_script(video, llm_key, model_size, workdir,
     report(0.72, "Translating...")
     script = translate_llm(script, llm_key, workdir,
                            progress=lambda f, desc="": report(0.72 + 0.25 * f, desc))
-    script_cache.write_text(json.dumps(script, ensure_ascii=False))
+    script_cache.write_text(json.dumps(script, ensure_ascii=False), encoding="utf-8")
     return script, False
 
 
@@ -283,11 +283,11 @@ def render_from_script(video_path, script, bg_hi, burn_subs,
     report(0.50, "Finding the real speech and the silent gaps (neural VAD)...")
     reg_cache = workdir / "speech_regions_v4.json"
     if reg_cache.exists():
-        regions = [tuple(x) for x in json.loads(reg_cache.read_text())]
+        regions = [tuple(x) for x in json.loads(reg_cache.read_text(encoding="utf-8"))]
         source = "cache"
     else:
         regions, source = detect_speech_regions(wav16)
-        reg_cache.write_text(json.dumps(regions))
+        reg_cache.write_text(json.dumps(regions), encoding="utf-8")
     silences = silence_from_regions(regions, total_len)
     windows = build_line_windows(script, silences, total_len, speech=regions)
     DIAG.append(f"Alignment: {len(regions)} speech region(s) via {source} VAD. "
