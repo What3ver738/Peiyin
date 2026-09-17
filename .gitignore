@@ -1,0 +1,60 @@
+# --- environments -----------------------------------------------------------
+venv/
+.venv/
+env/
+ENV/
+*.egg-info/
+build/
+dist/
+
+# --- python -----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- secrets ----------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.key
+credentials.json
+
+# --- app caches and output --------------------------------------------------
+# Never commit anything the app downloads or produces: transcripts fetched at
+# runtime, model files, work folders, finished episodes.
+cache/
+output/
+work/
+work_v*/
+models/
+transcripts/
+*.onnx
+
+# --- media (hard rule: no copyrighted media, transcripts or subtitles) -------
+*.mp4
+*.mkv
+*.avi
+*.mov
+*.webm
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.aac
+*.ogg
+*.srt
+*.vtt
+*.ass
+*.sub
+
+# --- os / editor ------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
